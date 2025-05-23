@@ -1,4 +1,4 @@
-export {addOpenClass, openPopup, closePopupEsc, closePopup, removeOpenClass } 
+export { addOpenClass, openPopup, closePopupEsc, closePopup };
 
 const buttonSubmitPopup = document.querySelectorAll(".popup__button");
 const buttonsClosePopup = document.querySelectorAll(".popup__close");
