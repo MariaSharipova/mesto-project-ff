@@ -14,6 +14,7 @@ function createCard(
   deleteButton.addEventListener("click", () => removeCard(cardElement));
   cardElement.querySelector(".card__title").textContent = name;
   cardElement.querySelector(".card__image").src = link;
+  cardElement.querySelector(".card__image").alt = `Фотография места: ${name}`; ;
   return cardElement;
 }
 

@@ -1,7 +1,5 @@
 export { addOpenClass, openPopup, closePopupEsc, closePopup };
 
-const buttonSubmitPopup = document.querySelectorAll(".popup__button");
-const buttonsClosePopup = document.querySelectorAll(".popup__close");
 
 function addOpenClass(popup) {
   popup.classList.add("popup_is-opened");
@@ -35,12 +33,12 @@ function closePopup(popup) {
       removeOpenClass(popup);
     }
   });
-  buttonsClosePopup.forEach((button) => {
+  buttonsClosePopupList.forEach((button) => {
     button.addEventListener("click", () => {
       removeOpenClass(popup);
     });
   });
-  buttonSubmitPopup.forEach((button) => {
+  buttonSubmitPopupList.forEach((button) => {
     button.addEventListener("click", () => {
       removeOpenClass(popup);
     });
