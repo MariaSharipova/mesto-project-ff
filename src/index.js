@@ -1,6 +1,6 @@
 import "./pages/index.css";
 import { initialCards } from "./modules/cards.js";
-import { createCard, removeCard } from "./modules/card.js";
+import { createCard, removeCard, handleCardLikeButtonClick } from "./modules/card.js";
 import { openPopup, closePopup } from "./modules/modal.js";
 
 const placesList = document.querySelector(".places__list");
@@ -60,12 +60,6 @@ function handleImageSubmit(evt) {
   closePopup(evt, popupAddPlace);
 }
 
-function handleCardLikeButtonClick(evt) {
-  if (evt.target.classList.contains("card__like-button")) {
-    evt.target.classList.toggle("card__like-button_is-active");
-  }
-}
-
 function handleCardImageClick(evt) {
   if (evt.target.classList.contains("card__image")) {
     openImagePopup(evt, popupImage);
@@ -79,11 +73,13 @@ buttonProfile.addEventListener("click", () => openProfilePopup(popupProfile));
 buttonAddPlace.addEventListener("click", () => openPopup(popupAddPlace));
 
 popups.forEach((popup) => {
-  popup.addEventListener("click", (evt) => closePopup(evt, popup));
-  buttonsClosePopupList.forEach((button) => {
-    button.addEventListener("click", (evt) => closePopup(evt, popup));
-  });
+  const closeButton = popup.querySelector('.popup__close');
+  popup.addEventListener('click', (evt) => closePopup(evt, popup));
+  if (closeButton) {
+    closeButton.addEventListener('click', (evt) => closePopup(evt, popup));
+  }
 });
+
 
 initialCards.forEach(function (item) {
   const cardElement = createCard(

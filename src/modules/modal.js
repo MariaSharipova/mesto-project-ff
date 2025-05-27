@@ -2,9 +2,7 @@ export { openPopup, closePopup };
 
 function openPopup(popup) {
   popup.classList.add("popup_is-opened");
-  document.addEventListener("keydown", (evt) => {
-    handleEscClose(evt, popup);
-  });
+  document.addEventListener("keydown", handleEscClose);
 }
 
 function closePopup(evt, popup) {
@@ -14,6 +12,9 @@ function closePopup(evt, popup) {
   }
 }
 
-function handleEscClose(evt, popup) {
-  closePopup(evt, popup);
+function handleEscClose(evt) {
+  const activePopup = document.querySelector(".popup_is-opened");
+  if (activePopup) {
+    closePopup(evt, activePopup);
+  }
 }

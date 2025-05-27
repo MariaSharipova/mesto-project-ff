@@ -1,6 +1,6 @@
-const cardTemplate = document.querySelector("#card-template").content;
+export { createCard, removeCard, handleCardLikeButtonClick };
 
-export { createCard, removeCard };
+const cardTemplate = document.querySelector("#card-template").content;
 
 function createCard(
   name,
@@ -22,4 +22,10 @@ function createCard(
 
 function removeCard(cardElement) {
   cardElement.remove();
+}
+
+function handleCardLikeButtonClick(evt) {
+  if (evt.target.classList.contains("card__like-button")) {
+    evt.target.classList.toggle("card__like-button_is-active");
+  }
 }
