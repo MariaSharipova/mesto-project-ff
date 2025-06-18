@@ -68,17 +68,16 @@ const openAddPlacePopup = (popup) => {
 };
 
 const openImagePopup = (cardElement, popup) => {
-  const image = popup.querySelector('.popup__image');
-  const caption = popup.querySelector('.popup__caption');
-  const imageElement = cardElement.querySelector('.card__image');
-  console.log(cardElement)
+  const image = popup.querySelector(".popup__image");
+  const caption = popup.querySelector(".popup__caption");
+  const imageElement = cardElement.querySelector(".card__image");
+  console.log(cardElement);
   image.src = imageElement.currentSrc;
   image.alt = imageElement.alt;
   caption.textContent = imageElement.alt;
 
   openPopup(popup);
 };
-
 
 const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
@@ -134,11 +133,10 @@ const handleAvatarSubmit = (evt) => {
 
 const handleCardImageClick = (evt) => {
   if (evt.target.classList.contains("card__image")) {
-    const cardElement = evt.target.closest('.card');
+    const cardElement = evt.target.closest(".card");
     openImagePopup(cardElement, popupImage);
   }
 };
-
 
 formEditProfile.addEventListener("submit", handleProfileFormSubmit);
 formNewPlace.addEventListener("submit", handleImageSubmit);
@@ -172,32 +170,24 @@ const initUser = () => {
     });
 };
 
-const initCards = (userId) => {
-  getInitialCards()
-    .then((data) => {
-      data.forEach(function (item) {
-        const cardElement = createCard(
-          item.name,
-          item.link,
-          item.likes,
-          removeCard,
-          handleCardLikeButtonClick,
-          handleCardImageClick,
-          userId,
-          item.owner._id,
-          item._id
-        );
-        placesList.append(cardElement);
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+Promise.all([getUser(), getInitialCards()])
+  .then(([userInfo, initialCards]) => {
+    const userId = userInfo._id;
 
-getUser()
-  .then((userInfo) => {
-    initCards(userInfo._id);
+    initialCards.forEach((item) => {
+      const cardElement = createCard(
+        item.name,
+        item.link,
+        item.likes,
+        removeCard,
+        handleCardLikeButtonClick,
+        handleCardImageClick,
+        userId,
+        item.owner._id,
+        item._id
+      );
+      placesList.append(cardElement);
+    });
   })
   .catch((err) => {
     console.log(err);
@@ -206,5 +196,3 @@ getUser()
 initUser();
 
 enableValidation(validationConfig);
-
-
