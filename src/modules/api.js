@@ -9,6 +9,8 @@ export {
   removeLike,
 };
 
+import { checkResponse } from "../utils/api-utils.js";
+
 const config = {
   baseUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-40",
   headers: {
@@ -20,23 +22,13 @@ const config = {
 const getUser = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 };
 
 const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 };
 
 const patchProfile = (name, about) => {
@@ -47,12 +39,7 @@ const patchProfile = (name, about) => {
       name: name,
       about: about,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 };
 
 const editAvatar = (link) => {
@@ -62,12 +49,7 @@ const editAvatar = (link) => {
     body: JSON.stringify({
       avatar: link,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 };
 
 const postNewCard = (name, link) => {
@@ -78,52 +60,26 @@ const postNewCard = (name, link) => {
       name: name,
       link: link,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 };
 
 const deleteCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(checkResponse);
 };
 
 const addLike = (cardId) => {
-  return fetch(`${config.baseUrl}/cards/likes/${cardId}`,
-      {
-        method: "PUT",
-        headers: config.headers,
-      }
-  ).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "PUT",
+    headers: config.headers,
+  }).then(checkResponse);
 };
 
 const removeLike = (cardId) => {
-  return fetch(
-    `${config.baseUrl}/cards/likes/${cardId}`,
-      {
-        method: "DELETE",
-        headers: config.headers,
-      }
-  ).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  }).then(checkResponse);
 };
-

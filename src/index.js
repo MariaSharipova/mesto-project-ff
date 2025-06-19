@@ -55,14 +55,13 @@ const openProfilePopup = (popup) => {
 };
 
 const openEditAvatarPopup = (popup) => {
-  avatarInput.value = "";
+  formEditAvatar.reset();
   clearValidation(popup, validationConfig);
   openPopup(popup);
 };
 
 const openAddPlacePopup = (popup) => {
-  imgInputName.value = "";
-  imgInputLink.value = "";
+  formNewPlace.reset();
   clearValidation(popup, validationConfig);
   openPopup(popup);
 };
@@ -71,11 +70,9 @@ const openImagePopup = (cardElement, popup) => {
   const image = popup.querySelector(".popup__image");
   const caption = popup.querySelector(".popup__caption");
   const imageElement = cardElement.querySelector(".card__image");
-  console.log(cardElement);
   image.src = imageElement.currentSrc;
   image.alt = imageElement.alt;
   caption.textContent = imageElement.alt;
-
   openPopup(popup);
 };
 
@@ -83,33 +80,50 @@ const handleProfileFormSubmit = (evt) => {
   evt.preventDefault();
   const saveButton = formEditProfile.querySelector(".popup__button");
   saveButton.textContent = "Сохранение...";
-  userName.textContent = nameInput.value;
-  userJob.textContent = jobInput.value;
-  patchProfile(nameInput.value, jobInput.value).finally(() => {
-    saveButton.textContent = "Сохранить";
-  });
-  closePopup(evt, popupProfile);
+  patchProfile(nameInput.value, jobInput.value)
+    .then(() => {
+      userName.textContent = nameInput.value;
+      userJob.textContent = jobInput.value;
+      closePopup(null, popupProfile);
+    })
+    .catch((err) => {
+      console.error("Ошибка обновления профиля:", err);
+    })
+    .finally(() => {
+      saveButton.textContent = "Сохранить";
+    });
 };
 
 const handleImageSubmit = (evt) => {
   evt.preventDefault();
   const saveButton = formNewPlace.querySelector(".popup__button");
   saveButton.textContent = "Сохранение...";
-  postNewCard(imgInputName.value, imgInputLink.value).finally(() => {
-    saveButton.textContent = "Сохранить";
-  });
-  const cardElement = createCard(
-    imgInputName.value,
-    imgInputLink.value,
-    [],
-    removeCard,
-    handleCardLikeButtonClick,
-    handleCardImageClick
-  );
-  placesList.prepend(cardElement);
-  formNewPlace.reset();
-
-  closePopup(evt, popupAddPlace);
+  postNewCard(imgInputName.value, imgInputLink.value)
+    .then((cardData) => {
+      const ownerId = cardData.owner._id;
+      const cardId = cardData._id;
+      const likes = cardData.likes;
+      const cardElement = createCard(
+        imgInputName.value,
+        imgInputLink.value,
+        likes,
+        removeCard,
+        handleCardLikeButtonClick,
+        handleCardImageClick,
+        ownerId,
+        ownerId,
+        cardId
+      );
+      placesList.prepend(cardElement);
+      formNewPlace.reset();
+      closePopup(null, popupAddPlace);
+    })
+    .catch((error) => {
+      console.error("Ошибка при добавлении карточки:", error);
+    })
+    .finally(() => {
+      saveButton.textContent = "Сохранить";
+    });
 };
 
 const handleAvatarSubmit = (evt) => {
@@ -117,10 +131,12 @@ const handleAvatarSubmit = (evt) => {
   const saveButton = formEditAvatar.querySelector(".popup__button");
   saveButton.textContent = "Сохранение...";
   const link = avatarInput.value;
+
   editAvatar(link)
     .then((updatedUser) => {
       userAvatar.src = updatedUser.avatar;
       formEditAvatar.reset();
+      closePopup(null, popupEditAvatar);
     })
     .catch((err) => {
       console.error("Ошибка обновления аватара:", err);
@@ -128,7 +144,6 @@ const handleAvatarSubmit = (evt) => {
     .finally(() => {
       saveButton.textContent = "Сохранить";
     });
-  closePopup(evt, popupEditAvatar);
 };
 
 const handleCardImageClick = (evt) => {
